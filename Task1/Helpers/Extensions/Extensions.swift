@@ -889,6 +889,14 @@ extension URLSession {
             
             task.resume()
         }
+}
+
+extension UINavigationController {
     
-    
+    open override func viewDidLoad() {
+        
+        interactivePopGestureRecognizer?.delegate = nil
+        
+        view.semanticContentAttribute = UserDefaults.isArabic ? .forceRightToLeft :.forceLeftToRight
+    }
 }

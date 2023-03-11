@@ -22,16 +22,18 @@ class MainCell: BaseCollectionViewCell {
         return i
     }()
     
-    lazy var label: UILabel = {
+    let label: UILabel = {
         
         let label = UILabel()
         label.textColor = .black
         label.text = "Long text"
-        label.font = .customFont(size: 16)
+        label.textAlignment = .center
         label.numberOfLines = 0
+        label.setContentCompressionResistancePriority(.init(999), for: .vertical)
         label.font = .customFont(size: 22)
         
         return label
+        
     }()
     
     override func configure() {
@@ -58,6 +60,5 @@ class MainCell: BaseCollectionViewCell {
         
         imageView.anchor(top: topAnchor, leading: leadingAnchor, trailing: trailingAnchor, bottom: nil)
         label.anchor(top: imageView.bottomAnchor, leading: leadingAnchor, trailing: trailingAnchor, bottom: bottomAnchor, padding: .init(top: 4, left: 8, bottom: 8, right: 0))
-        label.setContentCompressionResistancePriority(.init(999), for: .vertical)
     }
 }
