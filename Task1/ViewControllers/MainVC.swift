@@ -19,7 +19,7 @@ class MainVC: BaseViewController {
     
     var parentData: Parent?
     
-    let network = Network()
+   // let network = Network()
     
     lazy var cv: UICollectionView = {
         
@@ -49,9 +49,9 @@ class MainVC: BaseViewController {
         
         Task {
          
-           showLoadingView()
+           //showLoadingView()
            await getData()
-           hideLoadingView()
+          // hideLoadingView()
             
         }
         
@@ -61,34 +61,41 @@ class MainVC: BaseViewController {
         
         let urlObject = URL(string: "https://4saleq8.com/Api/ParentCatgories")
         
-        do {
-            
-            parentData = try await network.request(type: Parent.self, with: urlObject)
-            
-            cv.reloadData()
-            
-        } catch {
-            
-            print(error)
-            
-        }
-        
-//        URLSession.shared.request(url: urlObject, expecting: Parent.self) { [weak self] result in
-//            switch result {
-//
-//            case .success(let data):
-//                self?.parentData = data
-//
-//                DispatchQueue.main.async {
-//
-//                    self?.cv.reloadData()
-//                }
-//
-//            case .failure(let error):
-//                print(error)
-//            }
-//
+        showLoadingView()
+//        do {
+//            
+//            parentData = try await network.request(type: Parent.self, with: urlObject)
+//            
+//            cv.reloadData()
+//            
+//        } catch {
+//            
+//            print(error)
+//            
 //        }
+        
+        URLSession.shared.request(url: urlObject, expecting: Parent.self) { [weak self] result in
+            switch result {
+
+            case .success(let data):
+                self?.parentData = data
+
+                DispatchQueue.main.async {
+
+                    self?.cv.reloadData()
+                    self?.hideLoadingView()
+                }
+
+            case .failure(let error):
+                print(error)
+                
+                DispatchQueue.main.async {
+                    
+                    self?.hideLoadingView()
+                }
+            }
+
+        }
     }
     
     

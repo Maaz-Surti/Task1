@@ -19,7 +19,7 @@ class CategoryVC: BaseViewController {
     
     var categoryData: Category?
     
-    let network = Network()
+   // let network = Network()
     
     lazy var cv: UICollectionView = {
         
@@ -53,9 +53,9 @@ class CategoryVC: BaseViewController {
         
         Task {
             
-            showLoadingView()
+            //showLoadingView()
            await getCategoryData(categoryID: categoryID)
-            hideLoadingView()
+            //hideLoadingView()
             
         }
         
@@ -74,34 +74,42 @@ class CategoryVC: BaseViewController {
         
         let urlObject = URL(string: url)
         
-        do {
-            
-            categoryData = try await network.request(type: Category.self, with: urlObject)
-            
-            cv.reloadData()
-            
-        } catch {
-            
-            print(error)
-            
-        }
+        showLoadingView()
         
-//        URLSession.shared.request(url: urlObject, expecting: Parent.self) { [weak self] result in
-//            switch result {
-//
-//            case .success(let data):
-//                self?.parentData = data
-//
-//                DispatchQueue.main.async {
-//
-//                    self?.cv.reloadData()
-//                }
-//
-//            case .failure(let error):
-//                print(error)
-//            }
-//
+//        do {
+//            
+//            categoryData = try await network.request(type: Category.self, with: urlObject)
+//            
+//            cv.reloadData()
+//            
+//        } catch {
+//            
+//            print(error)
+//            
 //        }
+        
+        URLSession.shared.request(url: urlObject, expecting: Category.self) { [weak self] result in
+            switch result {
+
+            case .success(let data):
+                self?.categoryData = data
+
+                DispatchQueue.main.async {
+
+                    self?.cv.reloadData()
+                    self?.hideLoadingView()
+                }
+
+            case .failure(let error):
+                print(error)
+                
+                DispatchQueue.main.async {
+                    
+                    self?.hideLoadingView()
+                }
+            }
+
+        }
     }
     
     override func setConstraints() {
